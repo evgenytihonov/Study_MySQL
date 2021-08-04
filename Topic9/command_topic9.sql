@@ -127,7 +127,27 @@ DELIMITER ;
 -- значение NULL неприемлема. Используя триггеры, добейтесь того, чтобы одно из этих полей или оба 
 -- поля были заполнены. При попытке присвоить полям NULL-значение необходимо отменить операцию.
 
+-- INSERT 
+CREATE TRIGGER Both_not_null_insert
+BEFORE INSERT
+ON products FOR EACH ROW 
+BEGIN 
+  IF NEW.name IS NULL OR NEW.description IS NULL 
+    THEN SIGNAL SQLSTATE '45000'
+  SET MESSAGE_TEXT = 'product name or product description are NULL';
+END IF;
+END//
 
+-- UPDATE
+CREATE TRIGGER Both_not_null_update
+BEFORE UPDATE
+ON products FOR EACH ROW 
+BEGIN 
+  IF NEW.name IS NULL OR NEW.description IS NULL 
+    THEN SIGNAL SQLSTATE '45000'
+  SET MESSAGE_TEXT = 'product name or product description are NULL';
+END IF;
+END//
 
 
 
